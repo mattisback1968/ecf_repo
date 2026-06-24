@@ -3,11 +3,11 @@
 
 try {
 
-    $pdo = new PDO('mysql:host=localhost;dbname=melody_db', 'root', '');
+    $pdo = new PDO('mysql:host=localhost;dbname=resto', 'root', '');
 
-    foreach ($pdo->query('SELECT username FROM users', PDO::FETCH_ASSOC) as $user) {
+    foreach ($pdo->query('SELECT email, prenom FROM utilisateur', PDO::FETCH_ASSOC) as $user) {
 
-        echo $user['username'].'<br>';
+        echo $user['prenom'].' '.$user['email'].'<br>';
 
     }
 
