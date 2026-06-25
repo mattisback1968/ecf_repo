@@ -13,6 +13,6 @@ try {
 
 } catch (PDOException $e) {
 
-    echo 'Impossible de récupérer la liste des utilisateurs ou cnx impossible';
+    echo 'Impossible de récupérer la liste des utilisateurs';
 
 }
