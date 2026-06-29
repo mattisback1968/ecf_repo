@@ -12,5 +12,7 @@
             "email": "pascal.amann.perso@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "mongodb/mongodb": "^2.3"
+    }
 }

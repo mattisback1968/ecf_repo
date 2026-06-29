@@ -9,7 +9,7 @@ class DB_NoSQL {
 
     public static function get(): Client {
         if (self::$client === null) {
-            self::$client = new Client("mongodb://localhost:27017");
+            self::$client = new Client(php test_mongo.php"mongodb://localhost:27017");
         }
 
         return self::$client;
