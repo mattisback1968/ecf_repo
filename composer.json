@@ -1,0 +1,16 @@
+{
+    "name": "matt1968/ecf",
+    "description": "Projet ECF SQL MongoDB",
+    "autoload": {
+        "psr-4": {
+            "Matt1968\\Ecf\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Pascal Amann",
+            "email": "pascal.amann.perso@gmail.com"
+        }
+    ],
+    "require": {}
+}
