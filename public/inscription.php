@@ -13,7 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $mdp = $_POST['password'];
     $adresse = trim($_POST['adresse'] ?? '');
     $telephone = trim($_POST['telephone'] ?? '');
-
+    $regex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{10,}$/';
+    
     if (empty($email) || empty($mdp)) {
         $erreur = "Email et mot de passe sont obligatoires.";
     } else {
