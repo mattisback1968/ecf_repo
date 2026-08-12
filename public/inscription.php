@@ -71,16 +71,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <h1>Inscription</h1>
     
-    <?php if ($message): ?>
-        <p style="color:red"><?= htmlspecialchars($message) ?></p>
+    <?php if (!empty($erreur)): ?>
+    
+        <p style="color:red">
+        <?= htmlspecialchars($erreur) ?>
+    </p>
+
     <?php endif; ?>
 
 <form method="POST" action="inscription.php">
 
-    <label>Email : <input type="email" name="email" required></label><br>
-    <label>Mot de passe : <input type="password" name="password" required></label><br>
-    <label>Adresse : <input type="text" name="adresse"></label><br>
-    <label>Téléphone : <input type="tel" name="telephone"></label><br>
+    <label for="email">Email :</label>
+    <input
+        type="email"
+        id="email"
+        name="email"
+        required
+        placeholder="ex. utilisateur@fournisseur.com"
+    >
+    <span>Requis</span>
+    
+    <label for="password">Mot de passe :</label>
+    
+    <input
+        type="password"
+        id="password"
+        name="password"
+        required
+>
+    <span>Requis</span>
     <button type="submit">S'inscrire</button>
 </form>
 </body>
