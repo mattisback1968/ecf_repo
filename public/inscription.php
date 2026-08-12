@@ -9,30 +9,45 @@ $message = "";
 $erreur = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = trim($_POST['email']);
-    $mdp = $_POST['password'];
+
+    $email = trim($_POST['email'] ?? '');
+    $mdp = $_POST['password'] ?? '';
     $adresse = trim($_POST['adresse'] ?? '');
     $telephone = trim($_POST['telephone'] ?? '');
+
     $regex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{10,}$/';
-    
+
     if (empty($email) || empty($mdp)) {
+
         $erreur = "Email et mot de passe sont obligatoires.";
+
     } else {
-        // Vérifier si l'email existe déjà
-        $stmt = $pdo->prepare("SELECT utilisateur_id FROM utilisateur WHERE email = ?");
+
+        $stmt = $pdo->prepare(
+            "SELECT utilisateur_id FROM utilisateur WHERE email = ?"
+        );
         $stmt->execute([$email]);
 
         if ($stmt->fetch()) {
+
             $erreur = "Cet email est déjà utilisé.";
+
+        } elseif (!preg_match($regex, $mdp)) {
+
+            $erreur = "Le mot de passe doit comporter au moins 10 caractères, dont une minuscule, une majuscule, un chiffre et un caractère spécial.";
+
         } else {
-            $mdp_hash = password_hash($mdp, PASSWORD_DEFAULT);
+
+            // toutes les validations sont OK, hachage
+
+            $mdpHash = password_hash($mdp, PASSWORD_DEFAULT);
 
             $stmt = $pdo->prepare(
                 "INSERT INTO utilisateur (email, password, adresse, telephone) VALUES (?, ?, ?, ?)"
             );
             $stmt->execute([
                 $email,
-                $mdp_hash,
+                $mdpHash,
                 $adresse ?: null,
                 $telephone ?: null
             ]);
