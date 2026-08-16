@@ -27,7 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($utilisateur) {
 
-            // Pour l'instant mot de passe en clair
             if ($motDePasse === $utilisateur['password']) {
 
                 $_SESSION['utilisateur_id'] = $utilisateur['id'];

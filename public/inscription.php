@@ -8,6 +8,7 @@ $pdo = DB_SQL::get();
 $message = "";
 $erreur = '';
 
+# INSERER fonction Filter_var pour format adresse email (filter_var($mail, FILTER_VALIDATE_EMAIL))
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $email = trim($_POST['email'] ?? '');
