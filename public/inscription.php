@@ -2,6 +2,7 @@
 session_start();
 
 require_once __DIR__ . '/../config/db_sql.php';
+require_once __DIR__ . '/../functions/messages.php';
 
 $pdo = DB_SQL::get();
 
@@ -13,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $email = trim($_POST['email'] ?? '');
     $mdp = $_POST['password'] ?? '';
+    $mdpConfirm = $_POST['PasswordConfirm'] ?? '';
     $adresse = trim($_POST['adresse'] ?? '');
     $telephone = trim($_POST['telephone'] ?? '');
 
@@ -20,44 +22,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($email) || empty($mdp)) {
 
-        $erreur = "Email et mot de passe sont obligatoires.";
+    $message = "Email et mot de passe sont obligatoires.";
+    afficheMessage($message);
 
-    } else {
+} elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+
+    $message = "Format email non valide";
+    afficheMessage($message);
+
+} else {
+
+    $stmt = $pdo->prepare(
+        "SELECT utilisateur_id FROM utilisateur WHERE email = ?"
+    );
+    $stmt->execute([$email]);
+
+    if ($stmt->fetch()) {
+
+        $message = "Cet email est déjà utilisé.";
+        afficheMessage($message);
+
+    } elseif (!preg_match($regex, $mdp)) {
+
+        $message = "Le mot de passe doit comporter au moins 10 caractères, dont une minuscule, une majuscule, un chiffre et un caractère spécial.";
+        afficheMessage($message);
+
+    } elseif ($mdp !== $mdpConfirm) {
+        $message = "Les mots de passe ne correspondent pas.";
+        afficheMessage($message);
+    }
+    
+    else {
+
+        // Toutes les validations sont OK
+        $mdpHash = password_hash($mdp, PASSWORD_DEFAULT);
 
         $stmt = $pdo->prepare(
-            "SELECT utilisateur_id FROM utilisateur WHERE email = ?"
+            "INSERT INTO utilisateur (email, password, adresse, telephone)
+             VALUES (?, ?, ?, ?)"
         );
-        $stmt->execute([$email]);
 
-        if ($stmt->fetch()) {
-
-            $erreur = "Cet email est déjà utilisé.";
-
-        } elseif (!preg_match($regex, $mdp)) {
-
-            $erreur = "Le mot de passe doit comporter au moins 10 caractères, dont une minuscule, une majuscule, un chiffre et un caractère spécial.";
-
-        } else {
-
-            // toutes les validations sont OK, hachage
-
-            $mdpHash = password_hash($mdp, PASSWORD_DEFAULT);
-
-            $stmt = $pdo->prepare(
-                "INSERT INTO utilisateur (email, password, adresse, telephone) VALUES (?, ?, ?, ?)"
-            );
-            $stmt->execute([
-                $email,
-                $mdpHash,
-                $adresse ?: null,
-                $telephone ?: null
-            ]);
-
+        $stmt->execute([
+            $email,
+            $mdpHash,
+            $adresse ?: null,
+            $telephone ?: null
+        ]);
+    }
+}
+            
             header("Location: connexion.php?inscription=ok");
             exit;
         }
-    }
-}
 ?>
     
 <!DOCTYPE html>
@@ -75,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php if (!empty($erreur)): ?>
     
         <p style="color:red">
-        <?= htmlspecialchars($erreur) ?>
+        <?= htmlspecialchars($message) ?>
     </p>
 
     <?php endif; ?>
@@ -91,6 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         placeholder="ex. utilisateur@fournisseur.com"
     >
     <span>Requis</span>
+    <br><br>
     
     <label for="password">Mot de passe :</label>
     
@@ -101,7 +118,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         required
 >
     <span>Requis</span>
+    <br><br>
+
+    <label for="password_confirm">Confirmer le mot de passe :</label>
+
+    <input
+        type="password"
+        id="password_confirm"
+        name="PasswordConfirm"
+        required
+>
+    <span>Requis</span>
+    <br><br>
+    
     <button type="submit">S'inscrire</button>
+
 </form>
 </body>
 </html>

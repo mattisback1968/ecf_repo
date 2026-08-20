@@ -84,6 +84,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 </form>
 
+<br><br>
+
+ <div class="text-center pt-3">
+
+    <a href="/signup">Vous avez oublié votre mort de passe ? Cliquez ici !</a>
+
+</div>
+
 </body>
 </html>
 
