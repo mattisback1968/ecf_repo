@@ -48,13 +48,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         afficheMessage($message);
 
     } elseif ($mdp !== $mdpConfirm) {
+
         $message = "Les mots de passe ne correspondent pas.";
         afficheMessage($message);
-    }
-    
-    else {
+
+    } else {
 
         // Toutes les validations sont OK
+
         $mdpHash = password_hash($mdp, PASSWORD_DEFAULT);
 
         $stmt = $pdo->prepare(
@@ -68,12 +69,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $adresse ?: null,
             $telephone ?: null
         ]);
+
+        header("Location: connexion.php?inscription=ok");
+        exit;
     }
 }
-            
-            header("Location: connexion.php?inscription=ok");
-            exit;
-        }
+    }
+
 ?>
     
 <!DOCTYPE html>
@@ -88,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <h1>Inscription</h1>
     
-    <?php if (!empty($erreur)): ?>
+    <?php if (!empty($messsage)): ?>
     
         <p style="color:red">
         <?= htmlspecialchars($message) ?>

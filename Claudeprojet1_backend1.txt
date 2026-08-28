@@ -1,0 +1,134 @@
+Backend PHP :
+
+Connexion à la base (PDO recommandé, surtout que tu es sur MySQL/PostgreSQL)
+Hash des mots de passe (password_hash() / password_verify(), jamais de mot de passe en clair)
+Gestion de session (session_start(), variables de session pour l'utilisateur connecté)
+Deux scripts principaux : inscription.php et connexion.php
+
+Front HTML basique :
+
+Deux formulaires simples (POST vers les scripts PHP correspondants)
+Champs classiques : email/identifiant + mot de passe (+ confirmation pour l'inscription)
+
+Tu veux que je te génère un premier squelette de code pour ça (formulaires + scripts PHP + requêtes SQL associées), ou tu préfères qu'on avance étape par étape (d'abord la table users si elle n'existe pas encore, puis l'inscription, puis la connexion) ?
+
+la table user existe avec les champs classiques utilisateur_id (primary key bien sur), email, mdp en not null, et des champs facultatifs (adresse, téléphone)
+
+Updated memory
+Updated memory
+
+Parfait, avec cette structure on peut construire directement. Voici un squelette basique — connexion PDO, inscription et connexion avec hash de mot de passe :
+
+config.php (connexion à la base)
+
+php
+<?php
+$host = 'localhost';
+$dbname = 'ton_nom_de_base';
+$user = 'ton_user_mysql';
+$pass = 'ton_mdp_mysql';
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $pass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Erreur de connexion : " . $e->getMessage());
+}
+
+inscription.php
+
+php
+<?php
+session_start();
+require 'config.php';
+
+$erreur = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = trim($_POST['email']);
+    $mdp = $_POST['mdp'];
+    $adresse = trim($_POST['adresse'] ?? '');
+    $telephone = trim($_POST['telephone'] ?? '');
+
+    if (empty($email) || empty($mdp)) {
+        $erreur = "Email et mot de passe sont obligatoires.";
+    } else {
+        // Vérifier si l'email existe déjà
+        $stmt = $pdo->prepare("SELECT utilisateur_id FROM user WHERE email = ?");
+        $stmt->execute([$email]);
+
+        if ($stmt->fetch()) {
+            $erreur = "Cet email est déjà utilisé.";
+        } else {
+            $mdp_hash = password_hash($mdp, PASSWORD_DEFAULT);
+
+            $stmt = $pdo->prepare(
+                "INSERT INTO user (email, mdp, adresse, telephone) VALUES (?, ?, ?, ?)"
+            );
+            $stmt->execute([
+                $email,
+                $mdp_hash,
+                $adresse ?: null,
+                $telephone ?: null
+            ]);
+
+            header("Location: connexion.php?inscription=ok");
+            exit;
+        }
+    }
+}
+
+connexion.php
+
+php
+<?php
+session_start();
+require 'config.php';
+
+$erreur = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = trim($_POST['email']);
+    $mdp = $_POST['mdp'];
+
+    $stmt = $pdo->prepare("SELECT * FROM user WHERE email = ?");
+    $stmt->execute([$email]);
+    $utilisateur = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($utilisateur && password_verify($mdp, $utilisateur['mdp'])) {
+        $_SESSION['utilisateur_id'] = $utilisateur['utilisateur_id'];
+        $_SESSION['email'] = $utilisateur['email'];
+        header("Location: dashboard.php");
+        exit;
+    } else {
+        $erreur = "Email ou mot de passe incorrect.";
+    }
+}
+
+inscription.html (ou intégré en PHP)
+
+html
+<form method="POST" action="inscription.php">
+    <label>Email : <input type="email" name="email" required></label><br>
+    <label>Mot de passe : <input type="password" name="mdp" required></label><br>
+    <label>Adresse : <input type="text" name="adresse"></label><br>
+    <label>Téléphone : <input type="tel" name="telephone"></label><br>
+    <button type="submit">S'inscrire</button>
+</form>
+
+connexion.html
+
+html
+<form method="POST" action="connexion.php">
+    <label>Email : <input type="email" name="email" required></label><br>
+    <label>Mot de passe : <input type="password" name="mdp" required></label><br>
+    <button type="submit">Se connecter</button>
+</form>
+
+Points à noter :
+
+password_hash() / password_verify() gèrent le hashage — jamais de mot de passe stocké en clair.
+Les champs facultatifs passent à null s'ils sont vides plutôt qu'une chaîne vide.
+dashboard.php devra vérifier $_SESSION['utilisateur_id'] en début de fichier pour bloquer l'accès aux non-connectés.
+
+Tu veux que j'ajoute la protection de dashboard.php (redirection si non connecté) et un deconnexion.php pour compléter le cycle ?
