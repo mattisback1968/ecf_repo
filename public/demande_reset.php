@@ -1,13 +1,13 @@
 <?php
-// 1. Inclusion de Composer (au cas où vous utiliseriez Nodemailer plus tard)
+// 1. Inclusion de Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $message_retour = "";
 $classe_message = "";
 
-// 2. Connexion à votre base de données MySQL via PDO
+// 2. Connexion à la bdd MySQL via PDO
 try {
-    $db = new PDO('mysql:host=localhost;dbname=nom_de_votre_bdd;charset=utf8', 'root', '');
+    $db = new PDO('mysql:host=localhost;dbname=resto;charset=utf8', 'root', '');
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (Exception $e) {
     die('Erreur de connexion BDD : ' . $e->getMessage());
@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['email'])) {
         // 10. Simulation de l'envoi de l'email (Lien absolu contenant le TOKEN BRUT)
         $lien_reinitialisation = "http://ecf.local" . $token_brut;
         
-        // Pour vos tests, on triche un peu : on affiche le lien directement dans la page
+        // A des fin de test, on triche un peu : on affiche le lien directement dans la page
         $message_retour .= "<br><br><strong>[Mode Test - Lien généré] :</strong><br><a href='$lien_reinitialisation'>$lien_reinitialisation</a>";
     }
 }
