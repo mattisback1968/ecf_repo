@@ -1,8 +1,14 @@
 <?php
 
-session_start();
-
 require_once __DIR__ . '/../config/db_sql.php';
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+//var_dump(class_exists('DB_SQL'));
+//var_dump(get_declared_classes());
+//exit;
+
+session_start();
 
 $pdo = DB_SQL::get();
 
@@ -88,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
  <div class="text-center pt-3">
 
-    <a href="/signup">Vous avez oublié votre mort de passe ? Cliquez ici !</a>
+    <a href="demande_reset.php">Vous avez oublié votre mort de passe ? Cliquez ici !</a>
 
 </div>
 

@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['email'])) {
         // 10. Simulation de l'envoi de l'email (Lien absolu contenant le TOKEN BRUT)
         $lien_reinitialisation = "http://ecf.local" . $token_brut;
         
-        // A des fin de test, on triche un peu : on affiche le lien directement dans la page
+        // A des fin de test, on triche : on affiche le lien directement dans la page
         $message_retour .= "<br><br><strong>[Mode Test - Lien généré] :</strong><br><a href='$lien_reinitialisation'>$lien_reinitialisation</a>";
     }
 }
