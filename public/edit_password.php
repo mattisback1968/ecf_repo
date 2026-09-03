@@ -1,0 +1,28 @@
+<div class="hero-scene text-center text-white">
+    <div class="hero-scene-content">
+        <h1>Changement de mot de passe</h1>
+    </div>
+</div>
+<div class="container">
+    <form>
+        <div class="mb-3">
+          <label for="PasswordInput" class="form-label">Mot de passe</label>
+          <input type="password" class="form-control" id="PasswordInput" name="Password">
+        </div>
+        <br>
+
+        <div class="mb-3">
+            <label for="ValidatePasswordInput" class="form-label">Validez votre mot de passe</label>
+            <input type="password" class="form-control" id="ValidatePasswordInput" name="PasswordConfirm">
+          </div>
+        <br>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Changer mon mot de passe</button>
+        </div>
+    </form>
+    <br>
+    <div class="text-center pt-3">
+        <a href="/account.html">Modifier mes informations personnelles</a>
+    </div>
+</div>

@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
  <div class="text-center pt-3">
 
-    <a href="demande_reset.php">Vous avez oublié votre mort de passe ? Cliquez ici !</a>
+    <a href="demande_reset.php">Vous n'avez même pas été foutu de retenir votre mot de passe ? Cliquez ici ! !</a>
 
 </div>
 
