@@ -17,7 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $mdp = $_POST['password'] ?? '';
     $mdpConfirm = $_POST['PasswordConfirm'] ?? '';
     $adresse = trim($_POST['adresse'] ?? '');
-    $telephone = trim($_POST['telephone'] ?? '');
+    //$telephone = trim($_POST['telephone'] ?? '');
+    $prenom = trim($_POST['prenom']);
 
     $regex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{10,}$/';
 
@@ -60,15 +61,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mdpHash = password_hash($mdp, PASSWORD_DEFAULT);
 
         $stmt = $pdo->prepare(
-            "INSERT INTO utilisateur (email, password, adresse, telephone)
-             VALUES (?, ?, ?, ?)"
+            "INSERT INTO utilisateur (email, password, prenom)
+             VALUES (?, ?, ?)"
         );
 
         $stmt->execute([
             $email,
             $mdpHash,
-            $adresse ?: null,
-            $telephone ?: null
+            $prenom,
+            //$adresse ?: null,
+            //$telephone ?: null
         ]);
 
         header("Location: connexion.php?inscription=ok");
@@ -129,7 +131,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <label for="PrenomInput" class="form-label">Prénom</label>
 
-            <input type="text" class="form-control" id="PrenomInput" placeholder="Votre prénom" name="Prenom"> 
+            <input
+                type="text"
+                class="form-control"
+                id="PrenomInput"
+                placeholder="Votre prénom"
+                name="prenom"> 
 
         </div>
 
