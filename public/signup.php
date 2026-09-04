@@ -18,7 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $mdpConfirm = $_POST['PasswordConfirm'] ?? '';
     $adresse = trim($_POST['adresse'] ?? '');
     //$telephone = trim($_POST['telephone'] ?? '');
-    $prenom = trim($_POST['prenom']);
+    $lastName  = trim($_POST['last_name'] ?? '');
+    $firstName = trim($_POST['first_name'] ?? '');
 
     $regex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{10,}$/';
 
@@ -62,16 +63,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $stmt = $pdo->prepare(
             "INSERT INTO utilisateur (email, password, prenom)
-             VALUES (?, ?, ?)"
+            VALUES (?, ?, ?)"
         );
 
-        $stmt->execute([
-            $email,
-            $mdpHash,
-            $prenom,
-            //$adresse ?: null,
-            //$telephone ?: null
-        ]);
+    $stmt->execute([
+    $email,
+    $mdpHash,
+    $firstName
+    //$adresse ?: null,
+    //$telephone ?: null
+    ]);
 
         header("Location: connexion.php?inscription=ok");
         exit;
@@ -120,9 +121,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input
                 type="text"
                 class="form-control"
-                id="NomInput"
+                id="last_name"
                 placeholder="Votre nom"
-                name="Nom"> 
+                name="last_name">
 
         </div>
         <br>
@@ -134,9 +135,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input
                 type="text"
                 class="form-control"
-                id="PrenomInput"
+                id="first_name"
                 placeholder="Votre prénom"
-                name="prenom"> 
+                name="first_name">
 
         </div>
 
