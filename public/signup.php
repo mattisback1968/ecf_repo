@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //$telephone ?: null
     ]);
 
-        header("Location: connexion.php?inscription=ok");
+        header("Location: signin.php?signup=ok");
         exit;
     }
 }

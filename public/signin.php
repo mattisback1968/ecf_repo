@@ -19,11 +19,12 @@ $message = "";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $email = trim($_POST['email'] ?? '');
-    $motDePasse = $_POST['password'] ?? '';
+    $mdp = $_POST['password'] ?? '';
 
     // Vérification simple
-    if ($email === '' || $motDePasse === '') {
+    if ($email === '' || $mdp === '') {
         $message = "Veuillez remplir tous les champs.";
+        afficheMessage($message);
     } else {
 
         $sql = "SELECT * FROM utilisateur WHERE email = ?";
@@ -34,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($utilisateur) {
 
-            if ($motDePasse === $utilisateur['password']) {
+            if ($mdp === $utilisateur['password']) {
 
                 $_SESSION['utilisateur_id'] = $utilisateur['id'];
                 $_SESSION['nom'] = $utilisateur['nom'];
@@ -48,6 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         } else {
             $message = "Utilisateur inconnu.";
+            afficheMessage($message);
         }
     }
 }
@@ -64,10 +66,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="container">
     <form>
         <div class="mb-3">
-          <label for="EmailInput" class="form-label">Email</label>
+          <label for="email" class="form-label">Email</label>
 
           <input
-          type="email" class="form-control" id="EmailInput" placeholder="test@mail.fr" name="Email"> 
+            type="email"
+            class="form-control"
+            id="email"
+            placeholder="test@mail.fr"
+            name="email"
+            required>  
 
         </div>
 
@@ -77,7 +84,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
           <label for="PasswordInput" class="form-label">Mot de passe</label>
 
-          <input type="password" class="form-control" id="PasswordInput" name="Password" required>
+          <label for="password" class="form-label">Mot de passe</label>
+
+          <input
+            type="password"
+            class="form-control"
+            id="password" name="password"
+            required>
 
         </div>
 
@@ -95,6 +108,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="text-center pt-3">
 
-        <a href="/signup.php">Vous n’avez pas de compte ? Inscrivez-vous ici !</a>
+        <a href="/signup.php">Vous n’avez pas de compte ? Inscrivez-vous dans la joie et l'alégresse !</a>
 
     </div>
