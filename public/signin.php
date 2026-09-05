@@ -45,6 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             } else {
                 $message = "Mot de passe incorrect.";
+                afficheMessage($message);
             }
 
         } else {
@@ -108,6 +109,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="text-center pt-3">
 
-        <a href="/signup.php">Vous n’avez pas de compte ? Inscrivez-vous dans la joie et l'alégresse !</a>
+        <a href="/signup.php">Vous n’avez pas de compte ? Inscrivez-vous dans la joie et l'allégresse !</a>
 
     </div>
