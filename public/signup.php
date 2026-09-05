@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $mdp = $_POST['password'] ?? '';
     $mdpConfirm = $_POST['PasswordConfirm'] ?? '';
     $adresse = trim($_POST['adresse'] ?? '');
-    //$telephone = trim($_POST['telephone'] ?? '');
+    $telephone = trim($_POST['telephone'] ?? '');
     $lastName  = trim($_POST['last_name'] ?? '');
     $firstName = trim($_POST['first_name'] ?? '');
 
@@ -89,7 +89,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <title>Inscription</title>
 </head>
-
+<link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+    rel="stylesheet">
 <body>
 
     <?php if (!empty($message)): ?>
@@ -130,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="mb-3">
 
-            <label for="PrenomInput" class="form-label">Prénom</label>
+            <label for="first_name" class="form-label">Prénom</label>
 
             <input
                 type="text"
@@ -157,13 +159,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="mb-3">
 
-          <label for="password" class="form-label">Mot de passe</label>
+            <label for="Adresse" class="form-label">Adresse</label>
 
-          <input
-            type="password"
-            class="form-control"
-            id="password" name="password"
-            required>
+            <input
+                type="text"
+                class="form-control"
+                id="address"
+                placeholder="Votre adresse postale"
+                name="adress">
+
+        </div>
+
+        <div class="mb-3">
+
+            <label for="Country" class="form-label">Pays</label>
+
+            <input
+                type="text"
+                class="form-control"
+                id="country"
+                placeholder="Pays de résidence attaché à l'adresse"
+                name="country">
+
+        </div>
+
+        
+
+        <div class="mb-3">
+
+            <label for="password" class="form-label">Mot de passe</label>
+
+            <input
+                type="password"
+                class="form-control"
+                id="password" name="password"
+                required>
 
         </div>
 
@@ -175,7 +205,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 type="password"
                 class="form-control"
                 id="password_confirm"
-                name="PasswordConfirm"
+                name="password_confirm"
+                required>
+
+        </div>
+
+        <div class="mb-3">
+
+            <label for="mobile">Téléphone portable</label>
+
+            <input
+                type="tel"
+                class="form-control"
+                id="phone"
+                name="phone"
                 required>
 
           </div>
