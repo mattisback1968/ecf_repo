@@ -10,11 +10,12 @@ CREATE TABLE utilisateur (
     utilisateur_id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    prenom VARCHAR(50),
+    nom VARCHAR(255) NOT NULL,
+    prenom VARCHAR(50) NOT NULL,
     telephone VARCHAR(50),
+    adresse VARCHAR(255),
     ville VARCHAR(50),
-    pays VARCHAR(50),
-    adresse_postale VARCHAR(255)
+    pays VARCHAR(50)
 );
 
 -- =========================
