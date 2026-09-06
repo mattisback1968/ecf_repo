@@ -15,9 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $email = trim($_POST['email'] ?? '');
     $mdp = $_POST['password'] ?? '';
-    $mdpConfirm = $_POST['PasswordConfirm'] ?? '';
-    $adresse = trim($_POST['adresse'] ?? '');
-    $telephone = trim($_POST['telephone'] ?? '');
+    $mdpConfirm = $_POST['password_confirm'] ?? '';
+    $address = trim($_POST['address'] ?? '');
+    $country = 
+    $phone = trim($_POST['phone'] ?? '');
     $lastName  = trim($_POST['last_name'] ?? '');
     $firstName = trim($_POST['first_name'] ?? '');
 
@@ -62,16 +63,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mdpHash = password_hash($mdp, PASSWORD_DEFAULT);
 
         $stmt = $pdo->prepare(
-            "INSERT INTO utilisateur (email, password, prenom)
-            VALUES (?, ?, ?)"
-        );
+        "INSERT INTO utilisateur
+        (nom, prenom, email, adresse, pays, telephone, password)
+        VALUES (?, ?, ?, ?, ?, ?, ?)"
+);
 
     $stmt->execute([
+    $lastName,
+    $firstName,
     $email,
-    $mdpHash,
-    $firstName
-    //$adresse ?: null,
-    //$telephone ?: null
+    $address,
+    $country,
+    $phone,
+    $mdpHash
     ]);
 
         header("Location: signin.php?signup=ok");
@@ -118,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="mb-3">
 
-            <label for="NomInput" class="form-label">Nom</label>
+            <label for="last_name" class="form-label">Nom</label>
 
             <input
                 type="text"
@@ -128,7 +132,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 name="last_name">
 
         </div>
-        <br>
 
         <div class="mb-3">
 
@@ -166,7 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 class="form-control"
                 id="address"
                 placeholder="Votre adresse postale"
-                name="adress">
+                name="address">
 
         </div>
 
@@ -212,13 +215,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="mb-3">
 
-            <label for="mobile">Téléphone portable</label>
+            <label for="phone">Téléphone portable</label>
 
             <input
                 type="tel"
                 class="form-control"
                 id="phone"
                 name="phone"
+                placeholder = "06 99 98 65 12"
                 required>
 
           </div>
@@ -231,8 +235,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
     </form>
-
-    <br><br>
 
     <div class="text-center pt-3">
 
