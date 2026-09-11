@@ -15,13 +15,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $email = trim($_POST['email'] ?? '');
     $mdp = $_POST['password'] ?? '';
-    $mdpConfirm = $_POST['password_confirm'] ?? '';
-    $address = trim($_POST['address'] ?? '');
-    $country = trim($_POST['country'] ?? '');
-    $phone = trim($_POST['phone'] ?? '');   
-    $phone = trim($_POST['phone'] ?? '');
+    $mdpConfirm = $_POST['PasswordConfirm'] ?? '';
+    $adresse = trim($_POST['adresse'] ?? '');
+    $telephone = trim($_POST['telephone'] ?? '');
     $lastName  = trim($_POST['last_name'] ?? '');
     $firstName = trim($_POST['first_name'] ?? '');
+    $city = trim($_POST['ville']?? '');
 
     $regex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{10,}$/';
 
@@ -64,19 +63,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mdpHash = password_hash($mdp, PASSWORD_DEFAULT);
 
         $stmt = $pdo->prepare(
-        "INSERT INTO utilisateur
-        (nom, prenom, email, adresse, pays, telephone, password)
-        VALUES (?, ?, ?, ?, ?, ?, ?)"
-);
+            "INSERT INTO utilisateur (email, password, prenom)
+            VALUES (?, ?, ?)"
+        );
 
     $stmt->execute([
+    $email,
+    $mdpHash,
     $lastName,
     $firstName,
-    $email,
-    $address,
-    $country,
-    $phone,
-    $mdpHash
+    $adresse,
+    $telephone
     ]);
 
         header("Location: signin.php?signup=ok");
@@ -87,20 +84,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 ?>
     
+<!DOCTYPE html>
+<html lang="fr">
+
 <head>
     <meta charset="UTF-8">
-    <title>Mon compte</title>
-
-    <link
-        <link
-    href="bootstrap/css/bootstrap.min.css"
-    rel="stylesheet">
-    
+    <title>Inscription</title>
 </head>
+
+<link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+    rel="stylesheet">
 
 <body>
 
-    <?php if (!empty($message)): ?>
+    ?php if (!empty($message)): ?>
     
         <p style="color:red">
         <?= htmlspecialchars($message) ?>
@@ -112,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="hero-scene-content">
 
-        <h1class="text-dark">Inscription</h1>
+        <h1>Inscription</h1>
 
     </div>
 

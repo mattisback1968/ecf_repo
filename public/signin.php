@@ -57,13 +57,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vite et Gourmand</title>
+    <title>Vite et Gourmand - Connexion</title>
+<link
+    href="bootstrap/css/bootstrap.min.css"
+    rel="stylesheet">
+    
 </head>
 
-<link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-    rel="stylesheet">
+<div class="hero-scene text-center text-white">
 
+    <div class="hero-scene-content">
+
+    <h1 class="text-dark">Se connecter</h1>   
+    <h1>Compte utilisateur</h1>
+
+    </div>
+
+</div>
 <div class="container">
     <form method = "POST" action=signin.php>
         <div class="mb-3">

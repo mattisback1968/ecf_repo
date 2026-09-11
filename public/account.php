@@ -1,5 +1,6 @@
 
 <?php
+/*
 session_start();
 
 require_once __DIR__ . '/../config/db_sql.php';
@@ -14,14 +15,13 @@ $erreur = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $email = trim($_POST['email'] ?? '');
-    $mdp = $_POST['password'] ?? '';
-    $mdpConfirm = $_POST['password_confirm'] ?? '';
-    $address = trim($_POST['address'] ?? '');
-    $country = trim($_POST['country'] ?? '');
-    $phone = trim($_POST['phone'] ?? '');   
-    $phone = trim($_POST['phone'] ?? '');
+    //$mdp = $_POST['password'] ?? '';
+    //$mdpConfirm = $_POST['PasswordConfirm'] ?? '';
+    $adresse = trim($_POST['adresse'] ?? '');
+    $telephone = trim($_POST['telephone'] ?? '');
     $lastName  = trim($_POST['last_name'] ?? '');
     $firstName = trim($_POST['first_name'] ?? '');
+    $city = trim($_POST['ville']?? '');
 
     $regex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{10,}$/';
 
@@ -64,19 +64,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mdpHash = password_hash($mdp, PASSWORD_DEFAULT);
 
         $stmt = $pdo->prepare(
-        "INSERT INTO utilisateur
-        (nom, prenom, email, adresse, pays, telephone, password)
-        VALUES (?, ?, ?, ?, ?, ?, ?)"
-);
+            "UPDATE utilisateur (email, password, nom, prenom, telephone, adresse, ville, pays)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            WHERE utilisateur_id = "
+        );
 
     $stmt->execute([
+    $email,
+    $mdpHash,
     $lastName,
     $firstName,
-    $email,
-    $address,
-    $country,
-    $phone,
-    $mdpHash
+    $adresse,
+    $telephone
     ]);
 
         header("Location: signin.php?signup=ok");
@@ -86,13 +85,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
 ?>
-    
+*/  
+?> 
+
+<!DOCTYPE html>
+<html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <title>Mon compte</title>
 
     <link
-        <link
     href="bootstrap/css/bootstrap.min.css"
     rel="stylesheet">
     
@@ -112,7 +115,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="hero-scene-content">
 
-        <h1class="text-dark">Inscription</h1>
+    <h1 class="text-dark">Compte utilisateur</h1>   
+    <h1>Compte utilisateur</h1>
 
     </div>
 
@@ -120,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <div class="container">
 
-    <form method="POST" action="signup.php">
+    <form method="POST" action="account.php">
 
         <div class="mb-3">
 
@@ -158,7 +162,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             id="email"
             placeholder="test@mail.fr"
             name="email"
-            required> 
+            readonly> 
 
         </div>
 
@@ -188,32 +192,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         </div>
 
-        
-
-        <div class="mb-3">
-
-            <label for="password" class="form-label">Mot de passe</label>
-
-            <input
-                type="password"
-                class="form-control"
-                id="password" name="password"
-                required>
-
-        </div>
-
-        <div class="mb-3">
-
-            <label for="password_confirm" class="form-label">Confirmez le mot de passe</label>
-
-            <input
-                type="password"
-                class="form-control"
-                id="password_confirm"
-                name="password_confirm"
-                required>
-
-        </div>
 
         <div class="mb-3">
 
@@ -232,7 +210,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="text-center">
 
             <button
-                type="submit" class="btn btn-primary">S'inscrire</button>
+                type="submit" class="btn btn-primary">Modifier le compte</button>
+            <button
+                type="button" class="btn btn-danger">Supprimer mon compte</button>
 
         </div>
 
@@ -240,7 +220,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="text-center pt-3">
 
-        <a href="/signin.php">Vous avez déjà un compte ? Connectez-vous ici !</a>
+        <a href="/edit_password_reset.php">Cliquez ici pour modifier votre mot de passe</a>
+
+    </div>
+
+    
+    <div class="text-center pt-3">
+
+        <a href="/index.php">Retour à l'accueil</a>
 
     </div>
 
