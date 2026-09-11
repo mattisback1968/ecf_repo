@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['email'])) {
     $message_retour = "Si cet email correspond à un compte, un lien de réinitialisation vous a été envoyé.";
     $classe_message = "info";
 
-    // 4. Vérifier si l'utilisateur existe dans votre table 'utilisateur'
+    // 4. Vérifier si l'utilisateur existe dans la table 'utilisateur'
     $query = $db->prepare("SELECT utilisateur_id FROM utilisateur WHERE email = ?");
     $query->execute([$email_saisi]);
     $user = $query->fetch(PDO::FETCH_ASSOC);

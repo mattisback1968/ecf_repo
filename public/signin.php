@@ -1,4 +1,3 @@
-
 <?php
  
 require_once __DIR__ . '/../config/db_sql.php';
@@ -35,8 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $_SESSION['utilisateur_id'] = $utilisateur['utilisateur_id'];
                 $_SESSION['nom'] = $utilisateur['nom'];
+                $_SESSION['prenom'] = $utilisateur['prenom'];
 
-                header("Location: accueil.php");
+                header("Location: home.php");
                 exit;
 
             } else {
@@ -74,6 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
 </div>
+
 <div class="container">
     <form method = "POST" action=signin.php>
         <div class="mb-3">

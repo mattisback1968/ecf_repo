@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link
     href="bootstrap/css/bootstrap.min.css"
     rel="stylesheet">
-    
+
 </head>
 
 <body>
@@ -220,14 +220,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="text-center pt-3">
 
-        <a href="/edit_password_reset.php">Cliquez ici pour modifier votre mot de passe</a>
+        <a href="/edit_password.php">Cliquez ici pour modifier votre mot de passe</a>
 
     </div>
 
     
     <div class="text-center pt-3">
 
-        <a href="/index.php">Retour à l'accueil</a>
+        <a href="/home.php">Retour à l'accueil</a>
 
     </div>
 

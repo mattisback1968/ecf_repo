@@ -63,7 +63,7 @@
     </form>
     <br>
     <div class="text-center pt-3">
-        <a href="/account.html">Accueil</a>
+        <a href="/home.php">Accueil</a>
     </div>
 </div>
 </body>

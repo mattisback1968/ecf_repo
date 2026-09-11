@@ -65,26 +65,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $stmt = $pdo->prepare(
         "INSERT INTO utilisateur
-        (nom, prenom, email, adresse, pays, telephone, password)
-        VALUES (?, ?, ?, ?, ?, ?, ?)"
+        (nom, prenom, email, password)
+        VALUES (?, ?, ?, ?)"
 );
 
     $stmt->execute([
     $lastName,
     $firstName,
     $email,
-    $address,
-    $country,
-    $phone,
     $mdpHash
     ]);
 
-        header("Location: signin.php?signup=ok");
-        exit;
+    header("Location: signin.php?signup=ok");
+    exit;
+    }
     }
 }
-    }
 
+    /*$stmt = $pdo->prepare(
+        "UPDATE utilisateur_role
+        (nom, prenom, adresse, pays, telephone, password)
+        VALUES (?, ?, ?, ?, ?, ?) WHERE "
+);
+
+    $stmt->execute([
+    $lastName,
+    $firstName,
+    $address,
+    $country,
+    $phone,
+    ]);
+
+        header("Location: account.php?signup=ok");
+        exit;
+    }*/
 ?>
     
 <head>
@@ -97,6 +111,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     rel="stylesheet">
     
 </head>
+
+<div class="hero-scene text-center text-white">
+
+    <div class="hero-scene-content">
+
+    <h1 class="text-dark">Inscription</h1>   
+
+    </div>
+
+</div>
 
 <body>
 
@@ -131,7 +155,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 class="form-control"
                 id="last_name"
                 placeholder="Votre nom"
-                name="last_name">
+                name="last_name"
+                required>
 
         </div>
 
@@ -144,7 +169,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 class="form-control"
                 id="first_name"
                 placeholder="Votre prénom"
-                name="first_name">
+                name="first_name"
+                required>
 
         </div>
 
@@ -161,33 +187,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             required> 
 
         </div>
-
-        <div class="mb-3">
-
-            <label for="Adresse" class="form-label">Adresse</label>
-
-            <input
-                type="text"
-                class="form-control"
-                id="address"
-                placeholder="Votre adresse postale"
-                name="address">
-
-        </div>
-
-        <div class="mb-3">
-
-            <label for="Country" class="form-label">Pays</label>
-
-            <input
-                type="text"
-                class="form-control"
-                id="country"
-                placeholder="Pays de résidence attaché à l'adresse"
-                name="country">
-
-        </div>
-
         
 
         <div class="mb-3">
@@ -214,20 +213,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 required>
 
         </div>
-
-        <div class="mb-3">
-
-            <label for="phone">Téléphone portable</label>
-
-            <input
-                type="tel"
-                class="form-control"
-                id="phone"
-                name="phone"
-                placeholder = "06 99 98 65 12"
-                required>
-
-          </div>
 
         <div class="text-center">
 

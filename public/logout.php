@@ -4,5 +4,5 @@ session_start();
 
 session_destroy();
 
-header("Location: connexion.php");
+header("Location: home.php");
 exit;
