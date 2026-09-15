@@ -1,6 +1,6 @@
 
 <?php
-/*
+
 session_start();
 
 require_once __DIR__ . '/../config/db_sql.php';
@@ -9,84 +9,31 @@ require_once __DIR__ . '/../functions/messages.php';
 $pdo = DB_SQL::get();
 
 $message = "";
-$erreur = '';
 
-# INSERER fonction Filter_var pour format adresse email (filter_var($mail, FILTER_VALIDATE_EMAIL))
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    $email = trim($_POST['email'] ?? '');
-    //$mdp = $_POST['password'] ?? '';
-    //$mdpConfirm = $_POST['PasswordConfirm'] ?? '';
-    $adresse = trim($_POST['adresse'] ?? '');
-    $telephone = trim($_POST['telephone'] ?? '');
-    $lastName  = trim($_POST['last_name'] ?? '');
-    $firstName = trim($_POST['first_name'] ?? '');
-    $city = trim($_POST['ville']?? '');
-
-    $regex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{10,}$/';
-
-    if (empty($email) || empty($mdp)) {
-
-    $message = "Email et mot de passe sont obligatoires.";
-    afficheMessage($message);
-
-} elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-
-    $message = "Format email non valide";
-    afficheMessage($message);
-
-} else {
-
-    $stmt = $pdo->prepare(
-        "SELECT utilisateur_id FROM utilisateur WHERE email = ?"
-    );
-    $stmt->execute([$email]);
-
-    if ($stmt->fetch()) {
-
-        $message = "Cet email est déjà utilisé.";
-        afficheMessage($message);
-
-    } elseif (!preg_match($regex, $mdp)) {
-
-        $message = "Le mot de passe doit comporter au moins 10 caractères, dont une minuscule, une majuscule, un chiffre et un caractère spécial.";
-        afficheMessage($message);
-
-    } elseif ($mdp !== $mdpConfirm) {
-
-        $message = "Les mots de passe ne correspondent pas.";
-        afficheMessage($message);
-
-    } else {
-
-        // Toutes les validations sont OK
-
-        $mdpHash = password_hash($mdp, PASSWORD_DEFAULT);
-
-        $stmt = $pdo->prepare(
-            "UPDATE utilisateur (email, password, nom, prenom, telephone, adresse, ville, pays)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            WHERE utilisateur_id = "
-        );
-
-    $stmt->execute([
-    $email,
-    $mdpHash,
-    $lastName,
-    $firstName,
-    $adresse,
-    $telephone
-    ]);
-
-        header("Location: signin.php?signup=ok");
-        exit;
-    }
+// Vérifier que l'utilisateur est connecté
+if (!isset($_SESSION['utilisateur_id'])) {
+    header("Location: signin.php");
+    exit;
 }
-    }
 
+$utilisateurId = $_SESSION['utilisateur_id'];
+
+// Récupérer les informations de l'utilisateur
+$stmt = $pdo->prepare(
+    "SELECT nom, prenom, email, telephone, adresse, pays
+     FROM utilisateur
+     WHERE utilisateur_id = ?"
+);
+
+$stmt->execute([$utilisateurId]);
+
+$utilisateur = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$utilisateur) {
+    $message = "Utilisateur introuvable.";
+    afficheMessage($message);
+}
 ?>
-*/  
-?> 
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -131,11 +78,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label for="last_name" class="form-label">Nom</label>
 
             <input
-                type="text"
-                class="form-control"
-                id="last_name"
-                placeholder="Votre nom"
-                name="last_name">
+            type="text"
+            class="form-control"
+            id="last_name"
+            placeholder="Votre nom"
+            name="last_name"
+            value="<?= htmlspecialchars($utilisateur['nom'] ?? '') ?>">
 
         </div>
 
@@ -148,7 +96,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 class="form-control"
                 id="first_name"
                 placeholder="Votre prénom"
-                name="first_name">
+                name="first_name"
+                value="<?= htmlspecialchars($utilisateur['prenom'] ?? '') ?>">
 
         </div>
 
@@ -162,33 +111,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             id="email"
             placeholder="test@mail.fr"
             name="email"
-            readonly> 
+            readonly
+            value="<?= htmlspecialchars($utilisateur['email'] ?? '') ?>"> 
 
         </div>
 
         <div class="mb-3">
 
-            <label for="Adresse" class="form-label">Adresse</label>
+            <label for="address" class="form-label">Adresse</label>
 
             <input
                 type="text"
                 class="form-control"
                 id="address"
                 placeholder="Votre adresse postale"
-                name="address">
+                name="addresse"
+                value="<?= htmlspecialchars($utilisateur['adresse'] ?? '') ?>">
 
         </div>
 
         <div class="mb-3">
 
-            <label for="Country" class="form-label">Pays</label>
+            <label for="country" class="form-label">Pays</label>
 
             <input
                 type="text"
                 class="form-control"
                 id="country"
                 placeholder="Pays de résidence attaché à l'adresse"
-                name="country">
+                name="country"
+                value="<?= htmlspecialchars($utilisateur['pays'] ?? '') ?>">
 
         </div>
 
@@ -198,14 +150,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label for="phone">Téléphone portable</label>
 
             <input
-                type="tel"
-                class="form-control"
-                id="phone"
-                name="phone"
-                placeholder = "06 99 98 65 12"
-                required>
+            type="tel"
+            class="form-control"
+            id="phone"
+            name="phone"
+            placeholder="06 99 98 65 12"
+            value="<?= htmlspecialchars($utilisateur['telephone'] ?? '') ?>"
+        required>
 
-          </div>
+        </div>
 
         <div class="text-center">
 
