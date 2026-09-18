@@ -1,4 +1,3 @@
-
 <?php
 
 session_start();
@@ -18,34 +17,57 @@ if (!isset($_SESSION['utilisateur_id'])) {
 
 $utilisateurId = $_SESSION['utilisateur_id'];
 
-// Récupérer les informations de l'utilisateur
+// Enregistrer dans la bdd les informations mises à jour ou complétées de l'utilisateur
+    // Récupération du profil pour préremplir le formulaire
 $stmt = $pdo->prepare(
-    "SELECT nom, prenom, email, telephone, adresse, pays
+    "SELECT nom, prenom, email, telephone, adresse, ville, pays
      FROM utilisateur
      WHERE utilisateur_id = ?"
 );
-
 $stmt->execute([$utilisateurId]);
-
 $utilisateur = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if (!$utilisateur) {
-    $message = "Utilisateur introuvable.";
-    afficheMessage($message);
+// Mise à jour uniquement après soumission du formulaire
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $lastName = trim($_POST['last_name'] ?? '');
+    $firstName = trim($_POST['first_name'] ?? '');
+    $address = trim($_POST['adresse'] ?? '');
+    $country = trim($_POST['country'] ?? '');
+    $phone = trim($_POST['phone'] ?? '');
+    $city = trim($_POST['city'] ?? '');
+
+    $stmt = $pdo->prepare(
+        "UPDATE utilisateur
+         SET nom = ?, prenom = ?, adresse = ?, ville = ?, pays = ?, telephone = ?
+         WHERE utilisateur_id = ?"
+    );
+
+    $stmt->execute([
+        $lastName,
+        $firstName,
+        $address,
+        $city,
+        $country,
+        $phone,
+        $utilisateurId
+    ]);
+
+    header("Location: account.php");
+    exit;
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
-    <title>Mon compte</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ma Page d'Accueil</title>
+    <!-- Liaison avec le fichier CSS externe Bootstrap-->
     <link
     href="bootstrap/css/bootstrap.min.css"
     rel="stylesheet">
-
+    </link>
 </head>
 
 <body>
@@ -62,8 +84,7 @@ if (!$utilisateur) {
 
     <div class="hero-scene-content">
 
-    <h1 class="text-dark">Compte utilisateur</h1>   
-    <h1>Compte utilisateur</h1>
+    <h1 class="text-dark">Compte utilisateur</h1>
 
     </div>
 
@@ -112,7 +133,7 @@ if (!$utilisateur) {
             placeholder="test@mail.fr"
             name="email"
             readonly
-            value="<?= htmlspecialchars($utilisateur['email'] ?? '') ?>"> 
+            value="<?= htmlspecialchars($utilisateur['email'] ?? '') ?>">
 
         </div>
 
@@ -125,8 +146,21 @@ if (!$utilisateur) {
                 class="form-control"
                 id="address"
                 placeholder="Votre adresse postale"
-                name="addresse"
+                name="adresse"
                 value="<?= htmlspecialchars($utilisateur['adresse'] ?? '') ?>">
+
+        </div>
+
+        <div class="mb-3">
+
+            <label for="city">CP et ville</label>
+            <input
+                type="text"
+                class="form-control"
+                id="city"
+                name="city"
+                placeholder="75001 Paris"
+                value="<?= htmlspecialchars($utilisateur['ville'] ?? '') ?>">
 
         </div>
 
@@ -156,14 +190,14 @@ if (!$utilisateur) {
             name="phone"
             placeholder="06 99 98 65 12"
             value="<?= htmlspecialchars($utilisateur['telephone'] ?? '') ?>"
-        required>
+            required>
 
         </div>
 
         <div class="text-center">
 
             <button
-                type="submit" class="btn btn-primary">Modifier le compte</button>
+                type="submit" action=class="btn btn-primary">Modifier le compte</button>
             <button
                 type="button" class="btn btn-danger">Supprimer mon compte</button>
 
