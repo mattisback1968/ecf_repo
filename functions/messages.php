@@ -1,11 +1,21 @@
 <?php
 
+// 1. Pour les messages de succès / information (Vert)
 function afficheMessage($message)
 {
-    echo "<script>alert(" . json_encode($message) . ");</script>";
+    echo '
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Succès !</strong> ' . htmlspecialchars($message) . '
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+    </div>';
 }
 
+// 2. Pour les messages d'erreur / avertissement (Rouge)
 function afficheErreur($message)
 {
-    echo "<p style='color:red'>" . htmlspecialchars($message) . "</p>";
+    echo '
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Erreur :</strong> ' . htmlspecialchars($message) . '
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+    </div>';
 }

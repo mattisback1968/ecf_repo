@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $message_retour = "";
-$classe_message = ""; // contiendra "success", "danger", ou "info" pour Bootstrap
+$classe_message = "";
 
 // 2. Connexion à la bdd MySQL via PDO
 try {
@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['email'])) {
 
     // Sécurité : Message générique identique pour éviter l'énumération d'emails
     $message_retour = "Si cet email correspond à un compte, un lien de réinitialisation vous a été envoyé.";
-    $classe_message = "success"; // Vert par défaut pour simuler la réussite de l'action
+    $classe_message = "info";
 
     // 4. Vérifier si l'utilisateur existe dans la table 'utilisateur'
     $query = $db->prepare("SELECT utilisateur_id FROM utilisateur WHERE email = ?");
@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['email'])) {
         $user_id = $user['utilisateur_id'];
 
         // 5. Génération du token brut (64 caractères hexadécimaux aléatoires)
-        $token_brut = bin2hex(random_bytes(32));
+        $token_brut = bin2hex(random_bytes(32)); 
 
         // 6. Calcul du hash SHA-256 (ce qui va être stocké en BDD)
         $token_hash = hash('sha256', $token_brut);
@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['email'])) {
 
         // 9. Insertion du nouveau token haché
         $insert = $db->prepare("
-            INSERT INTO password_resets (user_id, token_hash, expires_at)
+            INSERT INTO password_resets (user_id, token_hash, expires_at) 
             VALUES (:user_id, :token_hash, :expires_at)
         ");
         $insert->execute([
@@ -55,11 +55,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['email'])) {
             'expires_at' => $expires_at
         ]);
 
-        // 10. CORRECTION DU LIEN : Ajout du fichier cible et du paramètre ?token=
+        // 10. Simulation de l'envoi de l'email (Lien absolu contenant le TOKEN BRUT)
         $lien_reinitialisation = "http://ecf.local" . $token_brut;
         
-        // À des fins de test : affichage du lien dans l'alerte
-        $message_retour .= "<br><br><span class='badge bg-warning text-dark'>Mode Test - Lien généré :</span><br><a href='$lien_reinitialisation' class='alert-link'>$lien_reinitialisation</a>";
+        // A des fin de test, on triche : on affiche le lien directement dans la page
+        $message_retour .= "<br><br><strong>[Mode Test - Lien généré] :</strong><br><a href='$lien_reinitialisation'>$lien_reinitialisation</a>";
     }
 }
 ?>
@@ -68,41 +68,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['email'])) {
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mot de passe oublié</title>
-    <!-- CSS de Bootstrap 5 -->
-    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .box { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        h2 { margin-top: 0; color: #333; }
+        input[type="email"] { width: 100%; padding: 10px; margin: 15px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #007BFF; color: white; border: none; border-radius: 4px; font-size: 1em; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .alert { padding: 12px; border-radius: 4px; margin-bottom: 15px; font-size: 0.9em; line-height: 1.4; }
+        .info { background: #e3f2fd; color: #0d47a1; border-left: 4px solid #1e88e5; }
+    </style>
 </head>
-<body class="bg-light d-flex align-items-center justify-content-center vh-100 m-0">
+<body>
 
-<div class="card shadow-sm p-4" style="width: 100%; max-width: 400px; border-radius: 10px;">
-    
-    <h2 class="h4 text-dark mb-2 text-center fw-bold">Mot de passe oublié ?</h2>
-    <p class="text-muted small text-center mb-4">Saisissez votre adresse email pour recevoir un lien de réinitialisation.</p>
+<div class="box">
+    <h2>Mot de passe oublié ?</h2>
+    <p style="color: #666; font-size: 0.9em;">Saisissez votre adresse email pour recevoir un lien de réinitialisation.</p>
 
-    <!-- Affichage de l'alerte convertie en Bootstrap 5 -->
     <?php if (!empty($message_retour)): ?>
-        <div class="alert alert-<?= $classe_message ?> alert-dismissible fade show small" role="alert">
-            <?= $message_retour ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
-        </div>
+        <div class="alert <?= $classe_message ?>"><?= $message_retour ?></div>
     <?php endif; ?>
 
     <form action="" method="POST">
-        <div class="mb-3">
-            <label for="email" class="form-label small fw-bold">Adresse email :</label>
-            <input type="email" id="email" name="email" class="form-control" required placeholder="exemple@domaine.com">
-        </div>
-        
-        <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">Envoyer le lien</button>
+        <label for="email">Adresse email :</label>
+        <input type="email" id="email" name="email" required placeholder="exemple@domaine.com">
+        <button type="submit">Envoyer le lien</button>
     </form>
-    
-    <div class="text-center mt-3">
-        <a href="/login.php" class="text-decoration-none small">← Retour à la connexion</a>
-    </div>
 </div>
 
-<!-- JS de Bootstrap (nécessaire pour pouvoir fermer l'alerte avec la croix) -->
-<script src="bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

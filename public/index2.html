@@ -1,15 +1,14 @@
-<?php
+?php
+// 1. Démarrage de la session PHP en tout premier lieu (avant tout code HTML)
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-session_start();
-
-require_once __DIR__ . '/../config/db_sql.php';
-require_once __DIR__ . '/../vendor/autoload.php';
-
-$pdo = DB_SQL::get();
-
-$isLoggedIn = isset($_SESSION['utilisateur_id']);
-
+// 2. Simulation ou vérification de la connexion
+// Adaptez la clé (ex: $_SESSION['user_id']) selon votre système actuel
+$isLoggedIn = isset($_SESSION['user_id']); 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -24,7 +23,7 @@ $isLoggedIn = isset($_SESSION['utilisateur_id']);
 
     <!-- Barre de Navigation -->
     <header class="navbar">
-        <div class="logo">Schnell und krustig</div>
+        <div class="logo">MonEntreprise</div> <!-- À CHANGER : Votre Logo / Nom du site -->
         
         <!-- Bouton Burger pour mobile -->
         <div class="burger" id="burger-menu">
@@ -33,50 +32,27 @@ $isLoggedIn = isset($_SESSION['utilisateur_id']);
             <span></span>
         </div>
 
-        <li class="nav-item dropdown">
-
-        <a href="#" class="nav-link" id="compteDropdown">
-        Compte
-        </a>
-
-        <ul class="dropdown-menu" id="compteMenu">
-
-        <?php if ($isLoggedIn): ?>
-
-            <li>
-                <a href="account.php">Mon compte</a>
-            </li>
-
-            <li>
-                <a href="logout.php">Déconnexion</a>
-            </li>
-
-        <?php else: ?>
-
-            <li>
-                <a href="signin.php">Se connecter</a>
-            </li>
-
-            <li>
-                <a href="signup.php">M'inscrire</a>
-            </li>
-
-        <?php endif; ?>
-
-        </ul>
-
-        </li>
+        <nav>
+            <ul class="nav-menu" id="nav-links">
+                <!-- À CHANGER : Les noms de vos menus -->
+                <li class="nav-item"><a href="#">Accueil</a></li>
+                <li class="nav-item"><a href="signin.php#">Connexion</a></li>
+                <li class="nav-item"><a href="signup.php">Inscription</a></li>
+                <li class="nav-item"><a href="account.php">Mon compte</a></li>
+            </ul>
+        </nav>
     </header>
 
     <!-- Section Principale avec Arrière-plan -->
     <section class="hero">
         <div class="hero-content">
-            <h1>Bienvenue sur notre site temporaire</h1>
-            <p>Découvrez nos recettes exceptionnelles.</p>
+            <h1>Bienvenue sur notre site</h1>
+            <p>Découvrez notre expertise unique.</p>
             <a href="#" class="btn">En savoir plus</a>
         </div>
     </section>
 
+    <!-- Pied de page -->
     <footer>
         <p>&copy; 2026 Vite et gourmand. Tous droits réservés.</p>
     </footer>

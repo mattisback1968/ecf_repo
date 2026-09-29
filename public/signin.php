@@ -3,6 +3,7 @@
 require_once __DIR__ . '/../config/db_sql.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../functions/messages.php';
+require_once __DIR__ . '/../config.php';
 
 session_start();
 
@@ -68,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="hero-scene-content">
 
-    <h1 class="text-dark">Se connecter</h1>   
+    <h1 class="text-dark">Se connecter</h1>
     <h1>Compte utilisateur</h1>
 
     </div>
@@ -76,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <div class="container">
-    <form method = "POST" action=signin.php>
+    <form method = "POST" action="signin.php">
         <div class="mb-3">
           <label for="email" class="form-label">Email</label>
 
@@ -86,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             id="email"
             placeholder="test@mail.fr"
             name="email"
-            required>  
+            required>
 
         </div>
 
@@ -114,7 +115,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     </form>
 
-
+    <div class="text-center pt-3">
+        
+        <a href="/request_password_reset.php">Mot de passe oublié ? Cliquez pour recevoir un mail de réinitialisation</a>
+    
+    </div>
+    
     <div class="text-center pt-3">
 
         <a href="/signup.php">Vous n’avez pas de compte ? Inscrivez-vous dans la joie et l'allégresse !</a>

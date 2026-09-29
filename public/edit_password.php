@@ -1,4 +1,4 @@
-><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 
 <head>
@@ -19,15 +19,6 @@
     rel="stylesheet">
 
 </head>
-
-<body>
-
-<div class="hero-scene text-center text-white">
-    <div class="hero-scene-content">
-        
-    <h1 class="text-dark"> Changement de mot de passe</h1>
-    </div>
-</div>
 
 <body>
     <<div class="hero-scene text-center text-white">

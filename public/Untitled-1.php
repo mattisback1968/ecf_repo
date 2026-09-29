@@ -1,12 +1,9 @@
+
 <?php
 session_start();
 
 require_once __DIR__ . '/../config/db_sql.php';
 require_once __DIR__ . '/../functions/messages.php';
-require_once __DIR__ . '/../functions/exceptions.php';
-require_once __DIR__ . '/../config.php';
-
-// ...
 
 $pdo = DB_SQL::get();
 
@@ -18,24 +15,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $email = trim($_POST['email'] ?? '');
     $mdp = $_POST['password'] ?? '';
-    $mdpConfirm = $_POST['password_confirm'] ?? '';
-    //$address = trim($_POST['address'] ?? '');
-    //$country = trim($_POST['country'] ?? '');
-    //$phone = trim($_POST['phone'] ?? '');
+    $mdpConfirm = $_POST['PasswordConfirm'] ?? '';
+    $adresse = trim($_POST['adresse'] ?? '');
+    $telephone = trim($_POST['telephone'] ?? '');
     $lastName  = trim($_POST['last_name'] ?? '');
     $firstName = trim($_POST['first_name'] ?? '');
+    $city = trim($_POST['ville']?? '');
 
     $regex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{10,}$/';
 
     if (empty($email) || empty($mdp)) {
 
     $message = "Email et mot de passe sont obligatoires.";
-    afficheErreur($message);
+    afficheMessage($message);
 
 } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
     $message = "Format email non valide";
-    afficheErreur($message);
+    afficheMessage($message);
 
 } else {
 
@@ -47,17 +44,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($stmt->fetch()) {
 
         $message = "Cet email est déjà utilisé.";
-        afficheErreur($message);
+        afficheMessage($message);
 
     } elseif (!preg_match($regex, $mdp)) {
 
         $message = "Le mot de passe doit comporter au moins 10 caractères, dont une minuscule, une majuscule, un chiffre et un caractère spécial.";
-        afficheErreur($message);
+        afficheMessage($message);
 
     } elseif ($mdp !== $mdpConfirm) {
 
         $message = "Les mots de passe ne correspondent pas.";
-        afficheErreur($message);
+        afficheMessage($message);
 
     } else {
 
@@ -66,91 +63,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mdpHash = password_hash($mdp, PASSWORD_DEFAULT);
 
         $stmt = $pdo->prepare(
-        "INSERT INTO utilisateur
-        (nom, prenom, email, password)
-        VALUES (?, ?, ?, ?)"
-);
+            "INSERT INTO utilisateur (email, password, prenom)
+            VALUES (?, ?, ?)"
+        );
 
     $stmt->execute([
-    $lastName,
-    $firstName,
     $email,
-    $mdpHash
-    ]);
-
-    //insertion du role utilisateur au dernier inscrit
-    $utilisateurId = (int) $pdo->lastInsertId();
-
-    $stmt = $pdo->prepare(
-    "SELECT role_id FROM role WHERE libelle = ?"
-);
-    $stmt->execute(['utilisateur']);
-
-    $roleId = $stmt->fetchColumn();
-
-    if ($roleId === false) {
-    throw new \RuntimeException("Le rôle utilisateur n'existe pas.");
-}
-
-    $stmt = $pdo->prepare(
-    "INSERT INTO utilisateur_role (utilisateur_id, role_id)
-     VALUES (?, ?)"
-);
-
-    $stmt->execute([$utilisateurId, $roleId]);
-
-    
-
-    header("Location: signin.php?signup=ok");
-    exit;
-    }
-    }
-}
-
-    /*$stmt = $pdo->prepare(
-        "UPDATE utilisateur_role
-        (nom, prenom, adresse, pays, telephone, password)
-        VALUES (?, ?, ?, ?, ?, ?) WHERE "
-);
-
-    $stmt->execute([
+    $mdpHash,
     $lastName,
     $firstName,
-    $address,
-    $country,
-    $phone,
+    $adresse,
+    $telephone
     ]);
 
-        header("Location: account.php?signup=ok");
+        header("Location: signin.php?signup=ok");
         exit;
-    }*/
+    }
+}
+    }
+
 ?>
     
+<!DOCTYPE html>
+<html lang="fr">
+
 <head>
     <meta charset="UTF-8">
-    <title>Mon compte</title>
-
-    <link
-        <link
-    href="bootstrap/css/bootstrap.min.css"
-    rel="stylesheet">
-    </link>
-    
+    <title>Inscription</title>
 </head>
 
-<div class="hero-scene text-center text-white">
-
-    <div class="hero-scene-content">
-
-    <h1 class="text-dark">Inscription</h1>
-
-    </div>
-
-</div>
+<link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+    rel="stylesheet">
 
 <body>
 
-    <?php if (!empty($message)): ?>
+    ?php if (!empty($message)): ?>
     
         <p style="color:red">
         <?= htmlspecialchars($message) ?>
@@ -162,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="hero-scene-content">
 
-        <h1class="text-dark">Inscription</h1>
+        <h1>Inscription</h1>
 
     </div>
 
@@ -181,8 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 class="form-control"
                 id="last_name"
                 placeholder="Votre nom"
-                name="last_name"
-                required>
+                name="last_name">
 
         </div>
 
@@ -195,8 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 class="form-control"
                 id="first_name"
                 placeholder="Votre prénom"
-                name="first_name"
-                required>
+                name="first_name">
 
         </div>
 
@@ -210,9 +156,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             id="email"
             placeholder="test@mail.fr"
             name="email"
-            required>
+            required> 
 
         </div>
+
+        <div class="mb-3">
+
+            <label for="Adresse" class="form-label">Adresse</label>
+
+            <input
+                type="text"
+                class="form-control"
+                id="address"
+                placeholder="Votre adresse postale"
+                name="address">
+
+        </div>
+
+        <div class="mb-3">
+
+            <label for="Country" class="form-label">Pays</label>
+
+            <input
+                type="text"
+                class="form-control"
+                id="country"
+                placeholder="Pays de résidence attaché à l'adresse"
+                name="country">
+
+        </div>
+
         
 
         <div class="mb-3">
@@ -239,6 +212,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 required>
 
         </div>
+
+        <div class="mb-3">
+
+            <label for="phone">Téléphone portable</label>
+
+            <input
+                type="tel"
+                class="form-control"
+                id="phone"
+                name="phone"
+                placeholder = "06 99 98 65 12"
+                required>
+
+          </div>
 
         <div class="text-center">
 
