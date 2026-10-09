@@ -1,6 +1,0 @@
-3 points essentiels à retenir pour l’interface utilisateur d’une application web de gestion, dans un contexte de développement front-end :
-
-Les écrans de CRUD doivent être pratiques et intuitifs, plus que décoratifs. Le cours insiste sur des interfaces utiles pour créer, lire, modifier et supprimer des données.
-Les formulaires Bootstrap structurent les pages de connexion, d’inscription et de compte. Les classes comme form-control, form-label, mb-3 et container servent à rendre les formulaires cohérents et lisibles.
-Les modales Bootstrap permettent de gérer des actions sans changer de page, par exemple pour l’édition d’une image ou la confirmation d’une action. Le bon usage repose sur une structure modal, modal-dialog, modal-content et sur data-bs-toggle et data-bs-target.
-En complément, le cours montre aussi qu’il faut parfois avancer sans maquette, mais en partant du but fonctionnel de la page. C’est une compétence très utile en projet front-end, surtout quand il faut faire évoluer rapidement une interface de gestion.
