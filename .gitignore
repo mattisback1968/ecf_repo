@@ -1,9 +1,26 @@
-/vendor/
-/divers/
-Claudeprojet1_backend.txt
-dev frontend avec IA3 points à retenir pour.txt
-plan projet.odt
-PowerShell essential commands.odt
-sujet ECF.pdf.lnk
-test_insertion_nosql.php
-test_no_sql_old.php
+# --- RÈGLE ACTUELLE ET GÉNÉRALE ---
+*.log
+
+# --- CONFIGURATION JAVA SANS MAVEN/GRADLE ---
+# Dossier où VS Code compile vos fichiers .class (souvent nommé 'bin' ou 'out')
+bin/
+out/
+# Fichiers de configuration spécifiques à Eclipse/VS Code Java
+.classpath
+.project
+.settings/
+
+# --- CONFIGURATION PYTHON ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.venv/
+venv/
+
+*.txt
+*.zip
+*.odt
+*test*.php
+*.lnk
